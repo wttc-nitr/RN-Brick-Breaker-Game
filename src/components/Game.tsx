@@ -17,14 +17,27 @@ export default function Game() {
     dy: -1,
   });
 
+  const isUserTurn = useSharedValue(true);
+  const onEndTurn = () => {
+    "worklet";
+    if (isUserTurn.value) return;
+
+    isUserTurn.value = true;
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <GameContext.Provider value={{ ball }}>
+      <GameContext.Provider value={{ ball, isUserTurn, onEndTurn }}>
         <View style={styles.board}>
           <Ball />
         </View>
       </GameContext.Provider>
-      <Button title="Move" onPress={() => {}} />
+      <Button
+        title="Move"
+        onPress={() => {
+          isUserTurn.value = false;
+        }}
+      />
     </SafeAreaView>
   );
 }
