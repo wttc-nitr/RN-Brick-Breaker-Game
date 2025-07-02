@@ -3,7 +3,10 @@ import { GameContext } from "@/GameContext";
 import type { BallData } from "@/types";
 import React from "react";
 import { Button, StyleSheet, useWindowDimensions, View } from "react-native";
-import { useSharedValue } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Ball from "./Ball";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
@@ -54,12 +57,44 @@ export default function Game() {
       }
     });
 
+  const pathStyle = useAnimatedStyle(() => {
+    const { x, y, dx, dy } = ball.value;
+    const angle = Math.atan2(-dx, dy);
+    return {
+      display: isUserTurn.value ? "flex" : "none",
+      top: y,
+      left: x - 0.5,
+      transform: [
+        {
+          rotate: `${angle}rad`,
+        },
+      ],
+    };
+  });
+
   return (
     <GestureDetector gesture={pan}>
       <SafeAreaView style={styles.container}>
         <GameContext.Provider value={{ ball, isUserTurn, onEndTurn }}>
           <View style={styles.board}>
             <Ball />
+
+            {/* ball trajectory */}
+            <Animated.View
+              style={[
+                {
+                  height: 1000,
+                  width: 0,
+                  borderWidth: 1,
+                  borderColor: "#ffffff99",
+                  borderStyle: "dashed",
+                  position: "absolute",
+                  left: 50,
+                  transformOrigin: "top-center",
+                },
+                pathStyle,
+              ]}
+            />
           </View>
         </GameContext.Provider>
         <Button

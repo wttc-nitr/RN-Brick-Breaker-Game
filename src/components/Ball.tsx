@@ -40,6 +40,7 @@ export default function Ball() {
 
     // collision
     if (y < r) {
+      // top wall
       // y is ordinate of center
       // console.log("contact");
       y = r; // important, Ball boundary trapping due to inconsistent frame timing:
@@ -47,17 +48,20 @@ export default function Ball() {
     }
 
     if (y > boardHeight - r) {
+      // bottom wall
       y = boardHeight - r; // imp
       dy *= -1;
       onEndTurn();
     }
 
     if (x < r) {
+      // left wall
       x = r; // imp
       dx *= -1;
     }
 
     if (x > width - r) {
+      // right wall
       x = width - r; // imp
       dx *= -1;
     }
