@@ -77,7 +77,7 @@ export const getResetPositionAndDirection = (
     return { ...ball, dx: newDx, x: newCx };
   }
   // right collision -> ball moving left & ...
-  else if (ball.dx < 0 && Math.abs(blockBottomRightX - block.x) < radius) {
+  else if (ball.dx < 0 && Math.abs(blockBottomRightX - ball.x) < radius) {
     const newDx = ball.dx * -1;
     const newCx = blockBottomRightX + radius;
     return { ...ball, x: newCx, dx: newDx };
