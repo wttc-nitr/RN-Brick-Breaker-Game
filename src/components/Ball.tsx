@@ -79,16 +79,18 @@ export default function Ball() {
     blocks?.modify((blocks) => {
       "worklet";
 
-      blocks.some((block, index) => {
-        const newBallData = getResetPositionAndDirection(ball.value, block);
-        if (newBallData) {
-          ball.value = newBallData;
-          block.val -= 1;
-          if (block.val <= 0) blocks.splice(index, 1);
+      blocks
+        .filter((block) => block.val > 0)
+        .some((block, index) => {
+          const newBallData = getResetPositionAndDirection(ball.value, block);
+          if (newBallData) {
+            ball.value = newBallData;
+            block.val -= 1;
+            // if (block.val <= 0) blocks.splice(index, 1);
 
-          return true;
-        }
-      });
+            return true;
+          }
+        });
 
       return blocks;
     });
