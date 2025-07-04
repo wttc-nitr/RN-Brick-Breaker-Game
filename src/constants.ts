@@ -5,4 +5,4 @@ export const ballRadius = 5;
 export const ballSpeed = 600;
 export const boardHeight = 500;
 export const blocksPerRow = 7;
-export const blockW = width / blocksPerRow - 10;
+export const blockW = width / blocksPerRow - 10; // a gap of 10 b/w the blocks in each row

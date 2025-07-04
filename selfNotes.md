@@ -8,7 +8,7 @@ const ballStyle = useAnimatedStyle(() => {
 })
 ```
 - `bridge` was asynchronous, but `JSI` is sync.
-
+- `useSharedValue` declares variables on UI thread (kind of).
 - `useSharedValue` when updated doesn't re-render the component. But, `useAnimatedStyle` style updates.
 - it happens directly on UI thread.
 
@@ -74,3 +74,25 @@ if (y < r) {
   dy *= -1;
 }
 ```
+#
+- side effects on JS thread -> `useEffect`
+- side effects on UI thread -> `useAnimatedReaction`
+#
+- normal props v/s sharedValue props
+```typescript
+export default function Block({ block }: { block: BlockData }) {
+  // props of this component aren't shared values
+  // so, when a sharedValue change, this component won't reflect the latest props-data.
+  // it'll only reflect when its parents will re-render (which will trigger this component to re-render)
+  return <Animated.View style={styles} />;
+}
+```
+```typescript
+// now it will reflect when any sharedValue data changes
+export default function Block ({blocks}: {blocks: SharedValue<BlockData[]>}) {
+  //
+  return <Animated.View style={styles} />
+}
+```
+#
+- `flatmap` -> map then flat with depth 1
