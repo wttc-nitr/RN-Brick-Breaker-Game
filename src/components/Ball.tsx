@@ -1,5 +1,6 @@
 import { ballRadius, ballSpeed, boardHeight } from "@/constants";
 import { useGameContext } from "@/GameContext";
+import { getResetPositionAndDirection } from "@/utils";
 import { useWindowDimensions } from "react-native";
 import Animated, {
   runOnJS,
@@ -9,7 +10,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 export default function Ball() {
-  const { ball, isUserTurn, onEndTurn } = useGameContext();
+  const { ball, isUserTurn, onEndTurn, blocks } = useGameContext();
   const { width } = useWindowDimensions();
   const ballStyles = useAnimatedStyle(() => {
     if (!ball) return {};
@@ -38,32 +39,32 @@ export default function Ball() {
     x += dx * delta * ballSpeed;
     y += dy * delta * ballSpeed;
 
-    // collision
+    // wall collisions
     if (y < r) {
       // top wall
       // y is ordinate of center
       // console.log("contact");
       y = r; // important, Ball boundary trapping due to inconsistent frame timing:
-      dy *= -1;
+      dy *= -1; // reverse the vertical direction
     }
 
     if (y > boardHeight - r) {
       // bottom wall
       y = boardHeight - r; // imp
-      dy *= -1;
+      dy *= -1; // reverse the vertical direction
       onEndTurn();
     }
 
     if (x < r) {
       // left wall
       x = r; // imp
-      dx *= -1;
+      dx *= -1; // reverse the horizontal direction
     }
 
     if (x > width - r) {
       // right wall
       x = width - r; // imp
-      dx *= -1;
+      dx *= -1; // reverse horizontal direction
     }
 
     ball.value = {
@@ -73,6 +74,24 @@ export default function Ball() {
       dy,
       dx,
     };
+
+    // blocks collision
+    blocks?.modify((blocks) => {
+      "worklet";
+
+      blocks.some((block, index) => {
+        const newBallData = getResetPositionAndDirection(ball.value, block);
+        if (newBallData) {
+          ball.value = newBallData;
+          block.val -= 1;
+          if (block.val <= 0) blocks.splice(index, 1);
+
+          return true;
+        }
+      });
+
+      return blocks;
+    });
   }, false); // false -> doesn't autostart
 
   const startFrameCallback = (val: boolean) => {
