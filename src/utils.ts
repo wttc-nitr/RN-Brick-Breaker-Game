@@ -16,7 +16,7 @@ export const generateBlocksRow = (row: number) => {
     if (shouldAdd) {
       blocks.push({
         x: col * (blockW + 10) + 5,
-        y: row * (blockW + 20),
+        y: row * (blockW + 10),
         w: blockW,
         val: 1,
       });

@@ -81,7 +81,7 @@ export default function Ball() {
 
       blocks
         .filter((block) => block.val > 0)
-        .some((block, index) => {
+        .some((block) => {
           const newBallData = getResetPositionAndDirection(ball.value, block);
           if (newBallData) {
             ball.value = newBallData;
