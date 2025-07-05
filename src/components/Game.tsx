@@ -1,4 +1,4 @@
-import { ballRadius, boardHeight } from "@/constants";
+import { ballRadius, blockW, boardHeight } from "@/constants";
 import { GameContext } from "@/GameContext";
 import type { BlockData, BallData } from "@/types";
 import React from "react";
@@ -23,10 +23,22 @@ export default function Game() {
     dy: -1, // negative, go up
   });
 
+  const blocks = useSharedValue<BlockData[]>(
+    Array.from({ length: 3 }).flatMap((_, row) => generateBlocksRow(row + 1)),
+  );
+
   const isUserTurn = useSharedValue(true);
   const onEndTurn = () => {
     "worklet";
     if (isUserTurn.value) return;
+
+    blocks?.modify((blocks) => {
+      blocks.forEach((block) => {
+        block.y += block.w;
+      });
+
+      return blocks;
+    });
 
     isUserTurn.value = true;
   };
@@ -73,10 +85,6 @@ export default function Game() {
       ],
     };
   });
-
-  const blocks = useSharedValue<BlockData[]>(
-    Array.from({ length: 3 }).flatMap((_, row) => generateBlocksRow(row + 1)),
-  );
 
   return (
     <GestureDetector gesture={pan}>

@@ -1,5 +1,8 @@
 import { useGameContext } from "@/GameContext";
-import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import Animated, {
+  useAnimatedStyle,
+  withTiming,
+} from "react-native-reanimated";
 
 export default function Block({ index }: { index: number }) {
   const { blocks } = useGameContext();
@@ -16,7 +19,7 @@ export default function Block({ index }: { index: number }) {
       height: w,
       position: "absolute",
       left: x,
-      top: y,
+      top: withTiming(y),
       backgroundColor: "orange",
     };
   });
