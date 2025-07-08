@@ -96,3 +96,9 @@ export default function Block ({blocks}: {blocks: SharedValue<BlockData[]>}) {
 ```
 #
 - `flatmap` -> map then flat with depth 1
+
+## SharedValue Limitation
+- Reanimated's SharedValue arrays only track property changes of existing elements (via modify).
+- Adding new elements by mutating the array (.push) doesn't trigger React re-renders since the array reference remains unchanged.
+
+- Rendering Mechanism: New UI components require React state updates to mount. UI-thread-only changes (like .push) bypass this.
