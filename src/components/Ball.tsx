@@ -50,9 +50,12 @@ export default function Ball() {
 
     if (y > boardHeight - r) {
       // bottom wall
-      y = boardHeight - r; // imp
-      dy *= -1; // reverse the vertical direction
+      y = Math.round(boardHeight - r);
+      //y = boardHeight - r; // imp
+      dy *= 0; // reverse the vertical direction
+      dx *= 0;
       onEndTurn();
+      // dy = -1;
     }
 
     if (x < r) {

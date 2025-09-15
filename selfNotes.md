@@ -102,3 +102,9 @@ export default function Block ({blocks}: {blocks: SharedValue<BlockData[]>}) {
 - Adding new elements by mutating the array (.push) doesn't trigger React re-renders since the array reference remains unchanged.
 
 - Rendering Mechanism: New UI components require React state updates to mount. UI-thread-only changes (like .push) bypass this.
+
+##
+- when ball touches the bottom,
+  - we push a re-render (increasing the score), the re-render may take time.
+  - the ball may have travelled some distance, causing it to rest above the bottom.
+  - so, make `dy *= 0`. Also, `dx = 0`
