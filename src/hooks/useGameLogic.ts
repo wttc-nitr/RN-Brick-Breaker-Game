@@ -3,7 +3,7 @@ import { ballRadius, blockW, boardHeight } from "@/constants";
 import type { BlockData, BallData } from "@/types/GameTypes";
 import { generateBlocksRow } from "@/utils";
 import { useRef, useState } from "react";
-import { useWindowDimensions } from "react-native";
+import { Alert, useWindowDimensions } from "react-native";
 import { Gesture } from "react-native-gesture-handler";
 import {
   runOnJS,
@@ -35,11 +35,36 @@ export const useGameLogic = () => {
     Array.from({ length: 3 }).flatMap((_, row) => generateBlocksRow(row + 1)),
   );
 
+  const onGameOver = () => {
+    Alert.alert("Game Over", "Score: " + score, [
+      {
+        text: "Restart",
+        onPress: () => {
+          blocks.value = [];
+          blocks.value = Array.from({ length: 3 }).flatMap((_, row) =>
+            generateBlocksRow(row + 1),
+          );
+          setScore(0);
+        },
+      },
+    ]);
+  };
+
   const onEndTurn = (val: number) => {
     "worklet";
 
     if (isUserTurn.value) return;
     isUserTurn.value = true;
+
+    // check if game is over
+    const gameOver = blocks.value.some(
+      (block) => block.val > 0 && block.y + 2 * (blockW + 10) > boardHeight,
+    );
+    if (gameOver) {
+      console.log("game over");
+      runOnJS(onGameOver)();
+      return;
+    }
 
     blocks?.modify((blocks) => {
       blocks.forEach((block) => {
