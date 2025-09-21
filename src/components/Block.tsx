@@ -1,4 +1,4 @@
-import { useGameContext } from "@/GameContext";
+import { useGameContext } from "@/providers/GameProvider";
 import Animated, {
   useAnimatedStyle,
   withTiming,
@@ -15,6 +15,7 @@ export default function Block({ index }: { index: number }) {
     const { x, y, w, val } = block;
 
     return {
+      display: "flex",
       width: w,
       height: w,
       position: "absolute",

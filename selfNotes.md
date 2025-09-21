@@ -108,3 +108,7 @@ export default function Block ({blocks}: {blocks: SharedValue<BlockData[]>}) {
   - we push a re-render (increasing the score), the re-render may take time.
   - the ball may have travelled some distance, causing it to rest above the bottom.
   - so, make `dy *= 0`. Also, `dx = 0`
+
+# Important:
+- Parent component v/s wrapper component:
+- `When a component visually wraps other components, let it accept JSX as children. This way, when the wrapper component updates its own state, React knows that its children don’t need to re-render.`

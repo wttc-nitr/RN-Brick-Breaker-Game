@@ -1,15 +1,18 @@
 import Game from "@/components/Game";
-import { StatusBar } from "expo-status-bar";
+import GameProvider from "@/providers/GameProvider";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 export default function App() {
   return (
     <SafeAreaProvider>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <Game />
-        <StatusBar style="light" />
-      </GestureHandlerRootView>
+      <SafeAreaView style={{ flex: 1 }}>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+          <GameProvider>
+            <Game />
+          </GameProvider>
+        </GestureHandlerRootView>
+      </SafeAreaView>
     </SafeAreaProvider>
   );
 }

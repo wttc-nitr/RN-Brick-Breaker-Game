@@ -1,5 +1,5 @@
 import { ballRadius, ballSpeed, boardHeight } from "@/constants";
-import { useGameContext } from "@/GameContext";
+import { useGameContext } from "@/providers/GameProvider";
 import { getResetPositionAndDirection } from "@/utils";
 import { useWindowDimensions } from "react-native";
 import Animated, {
@@ -10,7 +10,8 @@ import Animated, {
 } from "react-native-reanimated";
 
 export default function Ball() {
-  const { ball, isUserTurn, onEndTurn, blocks } = useGameContext();
+  const { ball, isUserTurn, onEndTurn, blocks, countCollisions } =
+    useGameContext();
   const { width } = useWindowDimensions();
   const ballStyles = useAnimatedStyle(() => {
     if (!ball) return {};
@@ -87,6 +88,8 @@ export default function Ball() {
         .some((block) => {
           const newBallData = getResetPositionAndDirection(ball.value, block);
           if (newBallData) {
+            if (countCollisions) countCollisions.current += 1;
+
             ball.value = newBallData;
             block.val -= 1;
             // if (block.val <= 0) blocks.splice(index, 1);
@@ -103,6 +106,7 @@ export default function Ball() {
     frameCallback.setActive(val);
   };
 
+  // works like useEffect (on UI thread)
   useAnimatedReaction(
     () => isUserTurn!.value,
     (val) => runOnJS(startFrameCallback)(!val),
