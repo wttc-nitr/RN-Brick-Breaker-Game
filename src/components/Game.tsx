@@ -15,7 +15,7 @@ export default function Game() {
       <View style={styles.container}>
         <View style={{ alignItems: "center" }}>
           <Text style={{ fontSize: 40, fontWeight: "bold", color: "gray" }}>
-            {score}
+            Score: {score}
           </Text>
         </View>
         <View style={styles.board}>

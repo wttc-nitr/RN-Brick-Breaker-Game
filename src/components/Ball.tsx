@@ -1,6 +1,7 @@
 import { ballRadius, ballSpeed, boardHeight } from "@/constants";
 import { useGameContext } from "@/providers/GameProvider";
 import { getResetPositionAndDirection } from "@/utils";
+import { useRef } from "react";
 import { useWindowDimensions } from "react-native";
 import Animated, {
   runOnJS,
@@ -10,9 +11,9 @@ import Animated, {
 } from "react-native-reanimated";
 
 export default function Ball() {
-  const { ball, isUserTurn, onEndTurn, blocks, countCollisions } =
-    useGameContext();
+  const { ball, isUserTurn, onEndTurn, blocks } = useGameContext();
   const { width } = useWindowDimensions();
+  const cnt = useRef(0);
   const ballStyles = useAnimatedStyle(() => {
     if (!ball) return {};
     const { x, y, r } = ball.value;
@@ -55,7 +56,7 @@ export default function Ball() {
       //y = boardHeight - r; // imp
       dy *= 0; // reverse the vertical direction
       dx *= 0;
-      onEndTurn();
+      onEndTurn(cnt.current);
       // dy = -1;
     }
 
@@ -88,7 +89,7 @@ export default function Ball() {
         .some((block) => {
           const newBallData = getResetPositionAndDirection(ball.value, block);
           if (newBallData) {
-            if (countCollisions) countCollisions.current += 1;
+            cnt.current += 1;
 
             ball.value = newBallData;
             block.val -= 1;

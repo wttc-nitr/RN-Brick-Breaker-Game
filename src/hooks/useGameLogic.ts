@@ -1,4 +1,5 @@
 import { ballRadius, blockW, boardHeight } from "@/constants";
+
 import type { BlockData, BallData } from "@/types/GameTypes";
 import { generateBlocksRow } from "@/utils";
 import { useRef, useState } from "react";
@@ -12,12 +13,13 @@ import {
 
 export const useGameLogic = () => {
   const [score, setScore] = useState(0);
-  const countCollisions = useRef(0);
   const { width } = useWindowDimensions();
+  const [push, setPushRerender] = useState(false);
 
-  const incrementScore = () => {
-    console.log(countCollisions.current);
-    setScore((x) => x + 1);
+  const incrementScore = (val: number) => {
+    // console.log("in useGameLogic, val is: ", val);
+    if (val === 0) setPushRerender((x) => !x);
+    else setScore((x) => x + val);
   };
 
   const ball = useSharedValue<BallData>({
@@ -33,7 +35,7 @@ export const useGameLogic = () => {
     Array.from({ length: 3 }).flatMap((_, row) => generateBlocksRow(row + 1)),
   );
 
-  const onEndTurn = () => {
+  const onEndTurn = (val: number) => {
     "worklet";
 
     if (isUserTurn.value) return;
@@ -48,7 +50,7 @@ export const useGameLogic = () => {
       return blocks;
     });
 
-    runOnJS(incrementScore)();
+    runOnJS(incrementScore)(val);
   };
 
   const panGesture = Gesture.Pan()
@@ -91,7 +93,6 @@ export const useGameLogic = () => {
     isUserTurn,
     blocks,
     onEndTurn,
-    countCollisions,
     score,
     panGesture,
     pathStyle,

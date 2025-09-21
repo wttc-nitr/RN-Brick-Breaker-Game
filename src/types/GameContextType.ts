@@ -6,8 +6,7 @@ export type GameContext = {
   ball: SharedValue<BallData>;
   isUserTurn: SharedValue<boolean>;
   blocks: SharedValue<BlockData[]>;
-  onEndTurn: () => void;
-  countCollisions: React.RefObject<number>;
+  onEndTurn: (val: number) => void;
   score: number;
   panGesture: PanGesture;
   pathStyle: {
