@@ -41,12 +41,6 @@ export default function Game() {
             ]}
           />
         </View>
-        <Button
-          title="Move"
-          onPress={() => {
-            // isUserTurn.value = false;
-          }}
-        />
       </View>
     </GestureDetector>
   );
